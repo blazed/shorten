@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -25,7 +27,7 @@ func Open() (Storage, error) {
 }
 
 func open() (*conn, error) {
-	db, err := sqlx.Connect("postgres", "user=blazed dbname=shorten sslmode=disable")
+	db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s dbname=%s sslmode=%s", "blazed", "shorten", "disable"))
 	if err != nil {
 		return nil, err
 	}
