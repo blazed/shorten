@@ -9,8 +9,7 @@ import (
 )
 
 type Config struct {
-	AllowedOrigins []string
-	Storage        storage.Storage
+	Storage storage.Storage
 }
 
 type Server struct {

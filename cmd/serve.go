@@ -29,8 +29,7 @@ func serve(cmd *cobra.Command, args []string) error {
 	}
 
 	serverConfig := server.Config{
-		AllowedOrigins: []string{"*"},
-		Storage:        s,
+		Storage: s,
 	}
 
 	srv, err := server.NewServer(serverConfig)
