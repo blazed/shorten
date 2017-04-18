@@ -5,7 +5,6 @@ import "time"
 type Storage interface {
 	Close() error
 
-	// CreateShortUrl() error
 	GetURL(url string) (URL, error)
 	CreateShortURL(short URL) error
 }
