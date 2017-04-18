@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/blazed/shorten/storage"
@@ -13,6 +14,8 @@ import (
 )
 
 const salt = "XoX^B#5utID2s36MYW!zl!fpd0hxY!#7"
+
+var hostDomain = os.Getenv("HOST_DOMAIN")
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "index.html", "")
@@ -34,18 +37,23 @@ func (s *Server) handleCreate(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	formURL := r.FormValue("url")
 
+	if len(formURL) == 0 {
+		http.Error(w, "URL cannot be empty", http.StatusBadRequest)
+		return
+	}
+
 	slug := genetareSlug(formURL)
 	if url, _ := s.storage.GetURL(slug); len(url.Slug) != 0 {
-		w.Write([]byte(fmt.Sprintf("%s/%s", r.Host, url.Slug)))
+		w.Write([]byte(fmt.Sprintf("%s/%s", hostDomain, url.Slug)))
 		return
 	}
 
 	short := storage.URL{Slug: slug, URL: formURL, CreatedAt: time.Now()}
 	if err := s.storage.CreateShortURL(short); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte(fmt.Sprintf("%s/%s", r.Host, slug)))
+	w.Write([]byte(fmt.Sprintf("%s/%s", hostDomain, slug)))
 }
 
 func genetareSlug(url string) string {
