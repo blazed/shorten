@@ -24,10 +24,10 @@ func NewServer(c Config) (*Server, error) {
 
 	r := chi.NewRouter()
 
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.DefaultCompress)
 	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.DefaultCompress)
+	r.Use(middleware.Recoverer)
 
 	r.Get("/", s.handleIndex)
 	r.Post("/", s.handleCreate)
