@@ -27,6 +27,7 @@ func NewServer(c Config) (*Server, error) {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.DefaultCompress)
+	r.Use(middleware.RealIP)
 
 	r.Get("/", s.handleIndex)
 	r.Post("/", s.handleCreate)
