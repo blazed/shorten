@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/blazed/shorten/storage"
-	"github.com/goware/cors"
 	"github.com/pressly/chi"
 	"github.com/pressly/chi/middleware"
 )
@@ -26,15 +25,6 @@ func NewServer(c Config) (*Server, error) {
 
 	r := chi.NewRouter()
 
-	cors := cors.New(cors.Options{
-		AllowedOrigins:   c.AllowedOrigins,
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Content-Type"},
-		AllowCredentials: false,
-		MaxAge:           300,
-	})
-
-	r.Use(cors.Handler)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.DefaultCompress)

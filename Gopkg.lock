@@ -1,10 +1,4 @@
-memo = "414b918d5c64d5101ca3a4b9de6056a133b6b5e5bf26b6d7048aaad2ab114575"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/goware/cors"
-  packages = ["."]
-  revision = "6ad15f4e1489e41776ee8b008597eafea9a67fd9"
+memo = "ff4bcdc25186c2a8c3dc7e739f1b59ced81840816cbd4884de67c46c14c59d49"
 
 [[projects]]
   branch = "master"
