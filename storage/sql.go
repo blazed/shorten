@@ -45,7 +45,7 @@ func (c *conn) Close() error {
 	return c.db.Close()
 }
 
-func (c *conn) GetUrl(slug string) (url URL, err error) {
+func (c *conn) GetURL(slug string) (url URL, err error) {
 	err = c.db.Get(&url, "SELECT * FROM shorten_urls WHERE slug = $1", slug)
 	if err != nil {
 		return url, err
@@ -54,8 +54,8 @@ func (c *conn) GetUrl(slug string) (url URL, err error) {
 
 }
 
-func (c *conn) CreateShortUrl(short URL) error {
-	_, err := c.db.NamedExec(`INSERT INTO shorten_urls (slug, url) values (:slug, :url);`, short)
+func (c *conn) CreateShortURL(short URL) error {
+	_, err := c.db.NamedExec(`INSERT INTO shorten_urls (slug, url, created_at) values (:slug, :url, :created_at);`, short)
 	if err != nil {
 		return err
 	}

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
+	"time"
 
 	"github.com/blazed/shorten/storage"
 	"github.com/pressly/chi"
@@ -21,7 +21,7 @@ func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleURLSlug(w http.ResponseWriter, r *http.Request) {
 	slug := chi.URLParam(r, "urlSlug")
 	// Check the database if urlSlug exists, if not throw error
-	url, err := s.storage.GetUrl(slug)
+	url, err := s.storage.GetURL(slug)
 	if err != nil {
 		http.Error(w, "No url found for "+slug, http.StatusNotFound)
 		return
@@ -34,19 +34,14 @@ func (s *Server) handleCreate(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	formURL := r.FormValue("url")
 
-	if !strings.HasPrefix(formURL, "http://") || !strings.HasPrefix(formURL, "https://") {
-		fmt.Println(formURL)
-		formURL = "http://" + formURL
-	}
-
 	slug := genetareSlug(formURL)
-	if url, _ := s.storage.GetUrl(slug); len(url.Slug) != 0 {
+	if url, _ := s.storage.GetURL(slug); len(url.Slug) != 0 {
 		w.Write([]byte(fmt.Sprintf("%s/%s", r.Host, url.Slug)))
 		return
 	}
 
-	short := storage.URL{Slug: slug, URL: formURL}
-	if err := s.storage.CreateShortUrl(short); err != nil {
+	short := storage.URL{Slug: slug, URL: formURL, CreatedAt: time.Now()}
+	if err := s.storage.CreateShortURL(short); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
