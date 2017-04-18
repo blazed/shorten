@@ -3,21 +3,26 @@ package storage
 import (
 	"fmt"
 
+	"os"
+
 	"github.com/jmoiron/sqlx"
+	// Third party drivers
 	_ "github.com/lib/pq"
 )
 
 var schema = `
 CREATE TABLE IF NOT EXISTS shorten_urls (
 	id BIGSERIAL NOT NULL PRIMARY KEY,
-	slug VARCHAR NOT NULL,
-	url VARCHAR NOT NULL
+	slug VARCHAR NOT NULL UNIQUE,
+	url VARCHAR NOT NULL,
+	created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 )`
 
 type conn struct {
 	db *sqlx.DB
 }
 
+// Open makes sure we can connect the database
 func Open() (Storage, error) {
 	conn, err := open()
 	if err != nil {
@@ -27,7 +32,7 @@ func Open() (Storage, error) {
 }
 
 func open() (*conn, error) {
-	db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s dbname=%s sslmode=%s", "blazed", "shorten", "disable"))
+	db, err := sqlx.Connect("postgres", fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME")))
 	if err != nil {
 		return nil, err
 	}
