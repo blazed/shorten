@@ -1,10 +1,6 @@
 
 [[dependencies]]
   branch = "master"
-  name = "github.com/goware/cors"
-
-[[dependencies]]
-  branch = "master"
   name = "github.com/jmoiron/sqlx"
 
 [[dependencies]]
